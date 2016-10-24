@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RD Lytics</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+    <script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
+    <script src="js/app.js"></script>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body ng-app="rdlytics" ng-controller="MainController">
+<h1>RD-Lytics
+    <small>Control Panel</small>
+</h1>
+<div class="left">
+    <h2>Users</h2>
+    <p ng-if="loadingUsers">Loading users...</p>
+    <ul>
+        <li ng-repeat="user in users | orderBy:'-created_at'">
+            <a ng-click="selectUser(user)">User #{{user.id}}</a>
+            <small>since {{ moment(user.created_at).format('lll') }}</small>
+        </li>
+    </ul>
+</div>
+<div class="right">
+    <h2>
+        Interactions
+        <small ng-if="selectedUser">for user #{{selectedUser.id}}</small>
+    </h2>
+
+    <p ng-if="loadingInteractions">Loading interactions...</p>
+    <p ng-if="!selectedUser && !loadingInteractions">Select a user to display interactions...</p>
+
+    <ul>
+        <li ng-if="selectedUser && !loadingInteractions && !interactions.length">
+            This user made no interactions!
+        </li>
+        <li ng-repeat="interaction in interactions | orderBy: created_at">
+            <span ng-if="interaction.location">Accessed a page <b>{{interaction.location}}</b></span>
+            <span ng-if="interaction.email">Submited a contact: <b>{{interaction.email}}</b></span>
+            <small>on {{ moment(interaction.created_at).format('lll') }}</small>
+        </li>
+    </ul>
+</div>
+</body>
+</html>
